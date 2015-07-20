@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Assets</title>
+   <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+   <script src="js/jquery-1.11.3.js"></script>
+   <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+   <h2>Assets Application</h2>
+   <div>
+     <select id="customWidget"></select>
+   </div>
+   <script>
+      $("#customWidget").customDropdown();
+      $.widget('custom.customDropdown', {
+         options: {
+            options: []
+         },
+         _create: function() {
+            this.options.options
+         }
+      });
+   </script>
+</body>
+</html>

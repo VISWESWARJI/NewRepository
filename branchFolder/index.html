@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>ShowCase</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/customstyle.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+  </head>
+  <body>
+    <div class="container my-container"  ng-controller="UserController">
+    <div class="row">
+	  <header>
+      <article>
+		      <div class="logo">
+			    <figure>
+				  <img src="images/LSVpcm1.png" width="190px" height="152px"/>
+				</figure>
+		        <h3>{{say}}</h3>
+			  </div>
+		   </article>
+   </header>
+	</div>
+	  <div class="container">
+	  <div class="row">
+	     <div class="col-md-12">
+		  <div class="col-md-4"> 
+			 <ul class="menu">
+			    <li><a href="#/">Home</a></li>
+				<li><a href="#/Show">Show User</a></li>
+				<li><a href="#/Add">Add User</a></li>
+			 </ul>
+			</div>
+		 </div>
+	  </div>
+	    <div class="row">
+		  <div class="col-md-12">
+					 <div ng-view=""></div>
+		  </div>
+		</div>
+	  </div>
+	   
+	  
+	  <!-- Model popup starts here -->
+
+	  
+	  
+	</div><!-- Controller ends here -->
+	<footer class=" footerbg">
+			<div class="container">
+				   <h3>Footer without container full width</h3>
+			</div>
+	 </footer>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-route.min.js"></script>
+	 <script src="js/angular-resource.min.js"></script>
+	<script>
+	
+
+var app = angular.module('app',['ngResource','ngRoute']);
+  
+  app.factory('UserService',function($resource){
+   // return $resource("http://jsonplaceholder.typicode.com/users/:user",{user:'@user'}); 
+     var data = $resource("http://jsonplaceholder.typicode.com/users/:user",{user:'@user'},{
+	  update:{
+	      method:'PUT'
+	  },
+	  delete:{
+	      method:'DELETE'
+	  }
+	 });
+	 return data;
+  });
+  
+  
+  app.controller('UserController',function($scope,UserService){
+           $scope.users = UserService.query();
+		   
+		   $scope.setData = function(userId){
+		      $scope.currentUser = UserService.get({user:userId});
+		   }
+		   
+		   $scope.addUser = function(){
+		   alert("Add clicked");
+		      //For Adding Record -->
+		    UserService.save({name:'Nirupam',email:'nirupam0007@gmail.com'});
+		   }
+		   
+		   $scope.deleteUser = function(userId){
+		         // For deleting a specific id -->
+				   UserService.delete({user:userId});
+			
+		   }
+		   
+		   $scope.updateData = function(currentUser){
+		    //For Update some  Record with specific id, here user is tied to userid-->
+			alert("Update btn clicked");
+		       UserService.update({user:currentUser.id},{name:currentUser.name, email:currentUser.email}); 
+		   }
+  });
+
+
+
+ app.config(function($routeProvider){
+$routeProvider
+.when('/',{
+      templateUrl:'Partials/home.html',
+	  controller:'HomeController'
+})
+.when('/Show',{
+      templateUrl:'Partials/showUser.html',
+	  controller:'UserController'
+})
+.when('/Add',{
+      templateUrl:'Partials/addUser.html',
+	  controller:'UserController'
+})
+.otherwise({redirectTo:'/'})
+});
+
+	</script>
+	
+	
+	
+  </body>
+</html>
